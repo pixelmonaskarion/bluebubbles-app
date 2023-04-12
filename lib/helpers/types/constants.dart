@@ -96,6 +96,41 @@ enum Skins {
   Samsung,
 }
 
+enum EmojiFonts {
+  System(path: "", url: "", name: "System", fontName: ""),
+  iOS(path: "assets/fonts/AppleColorEmoji.ttf", url:"https://drive.google.com/uc?export=download&id=1PXrutoY0VpDAC9XNj4swut4Iahf4kBON", name: "iOS", fontName: "Apple Color Emoji"),
+  NotoColor(path: "assets/fonts/NotoColorEmoji-Regular.ttf", url: "https://drive.google.com/uc?export=download&id=1JGs1gUBUblBiYhjGdLl0LPV1jL8Hap2Y", name: "Color Noto (Google)", fontName: "Noto Color Emoji"),
+  Noto(path: "assets/fonts/NotoEmoji-Regular.ttf", url: "https://drive.google.com/uc?export=download&id=1bGAOY32JObzi7lYOb3SXg6rX35tTenyH", name: "Noto (B&W Google)", fontName: "Noto Emoji Regular");
+  const EmojiFonts({
+    required this.path,
+    required this.name,
+    required this.fontName,
+    required this.url,
+  });
+
+  final String path;
+  final String name;
+  final String fontName;
+  final String url;
+
+  bool get isSystem => (this == System);
+
+  @override
+  String toString() {
+      return name;
+  }
+
+  static EmojiFonts fromString(String efString) {
+    for (EmojiFonts font in EmojiFonts.values) {
+      if (font.name == efString) {
+        return font;
+      }
+    }
+    //default
+    return EmojiFonts.System;
+  }
+}
+
 enum SwipeDirection {
   LEFT,
   RIGHT,

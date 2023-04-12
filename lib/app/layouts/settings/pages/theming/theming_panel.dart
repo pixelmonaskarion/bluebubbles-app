@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:bluebubbles/app/components/circle_progress_bar.dart';
 import 'package:bluebubbles/helpers/helpers.dart';
 import 'package:bluebubbles/utils/window_effects.dart';
 import 'package:bluebubbles/utils/logger.dart';
@@ -735,6 +736,80 @@ class _ThemingPanelState extends CustomState<ThemingPanel, void, ThemingPanelCon
                           );
                         } else {
                           return const SizedBox.shrink();
+                        }
+                      }),
+                      Obx(() {
+                        if (!controller.downloadingFont.value) {
+                          return SettingsOptions<EmojiFonts>(
+                            initial: ss.settings.emojiFont,
+                            onChanged: (font) async {
+                              if (font == null) return;
+                              if (!ss.settings.emojiFont.isSystem) {
+                                //TODO delete the loaded font here
+                              }
+                              ss.settings.emojiFont = font;
+                              saveSettings();
+                              if (font.isSystem) {
+                                setState(() {});
+                                showSnackbar("Notice", "Please Restart the app to load System font");
+                                return;
+                              }
+                              setState(() {});
+                              final response = await http.downloadFromUrl(font.url,
+                                progress: (current, total) {
+                                  if (current <= total) {
+                                    controller.downloadingFont.value = true;
+                                    controller.progress.value = current / total;
+                                    controller.totalSize.value = total;
+                                  }
+                                },).catchError((err) {
+                                  Logger.error(err.toString());
+                                  showSnackbar("Error", "Failed to fetch font");
+                                  return Response(requestOptions: RequestOptions(path: ''));
+                              });
+                              controller.downloadingFont.value = false;
+                              if (response.statusCode == 200) {
+                                try {
+                                  final Uint8List data = response.data;
+                                  final file = File("${fs.appDocDir.path}/font/${font.name}.ttf");
+                                  await file.create(recursive: true);
+                                  await file.writeAsBytes(data);
+                                  fs.fontExistsOnDisk.value = true;
+                                  final fontLoader = FontLoader(font.fontName);
+                                  final cachedFontBytes = ByteData.view(data.buffer);
+                                  fontLoader.addFont(
+                                    Future<ByteData>.value(cachedFontBytes),
+                                  );
+                                  await fontLoader.load();
+                                  showSnackbar("Notice", "Font loaded");
+                                } catch (e) {
+                                  Logger.error(e);
+                                  showSnackbar("Error", "Something went wrong");
+                                }
+                              } else {
+                                showSnackbar("Error", "Failed to fetch font");
+                              }
+                              //eventDispatcher.emit('theme-update', null);
+                            },
+                            options: EmojiFonts.values,
+                            textProcessing: (val) => val.name,
+                            capitalize: false,
+                            title: "Emoji Font",
+                            backgroundColor: tileColor,
+                            secondaryColor: headerColor,
+                          );
+                        } else {
+                          return SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: Center(
+                                child: CircleProgressBar(
+                                  value: controller.progress.value?.toDouble() ?? 0.0 * (controller.totalSize.value?.toDouble() ?? 0.0),
+                                  backgroundColor: context.theme.colorScheme.outline,
+                                  foregroundColor: context.theme.colorScheme.properOnSurface,
+                                )
+                              )
+                          );
                         }
                       }),
                     ],

@@ -80,6 +80,8 @@ class Settings {
   final RxnString userAvatarPath = RxnString();
   // final RxString emojiFontFamily;
 
+  EmojiFonts emojiFont = EmojiFonts.System;
+
   // Private API features
   final RxBool enablePrivateAPI = false.obs;
   final RxBool privateSendTypingIndicators = false.obs;
@@ -285,6 +287,7 @@ class Settings {
       'windowEffectCustomOpacityLight': windowEffectCustomOpacityLight.value,
       'windowEffectCustomOpacityDark': windowEffectCustomOpacityDark.value,
       'useWindowsAccent': useWindowsAccent.value,
+      'emojiFont': emojiFont.toString(),
     };
     if (includeAll) {
       map.addAll({
@@ -407,6 +410,7 @@ class Settings {
     ss.settings.windowEffectCustomOpacityLight.value = map['windowEffectCustomOpacityLight'] ?? 0.5;
     ss.settings.windowEffectCustomOpacityDark.value = map['windowEffectCustomOpacityDark'] ?? 0.5;
     ss.settings.useWindowsAccent.value = map['useWindowsAccent'] ?? false;
+    ss.settings.emojiFont = (map['emojiFont'] == null) ? EmojiFonts.System : EmojiFonts.fromString(map['emojiFont']);
     ss.settings.save();
   }
 
@@ -526,6 +530,7 @@ class Settings {
     s.windowEffectCustomOpacityLight.value = map['windowEffectCustomOpacityLight'] ?? 0.5;
     s.windowEffectCustomOpacityDark.value = map['windowEffectCustomOpacityDark'] ?? 0.5;
     s.useWindowsAccent.value = map['useWindowsAccent'] ?? false;
+    s.emojiFont = (map['emojiFont'] == null) ? EmojiFonts.System : EmojiFonts.fromString(map['emojiFont']);
     return s;
   }
 }

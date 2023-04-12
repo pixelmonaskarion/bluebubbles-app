@@ -847,7 +847,7 @@ class TextFieldComponent extends StatelessWidget {
                     onSubmitted: (String value) {
                       controller!.subjectFocusNode.requestFocus();
                     },
-                    contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: onContentCommit),
+                    // contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: onContentCommit),
                   ),
                 if (!isChatCreator && ss.settings.enablePrivateAPI.value && ss.settings.privateSubjectLine.value && chat!.isIMessage && iOS)
                   Divider(
@@ -1018,7 +1018,7 @@ class TextFieldComponent extends StatelessWidget {
                     if (isNullOrEmpty(value)! && (controller?.pickedAttachments.isEmpty ?? false)) return;
                     sendMessage.call();
                   },
-                  contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: onContentCommit),
+                  // contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: onContentCommit),
                 ),
               ],
             ),
@@ -1028,7 +1028,7 @@ class TextFieldComponent extends StatelessWidget {
     );
   }
 
-  void onContentCommit(KeyboardInsertedContent content) async {
+  void onContentCommit(dynamic content) async {
     // Add some debugging logs
     Logger.info("[Content Commit] Keyboard received content");
     Logger.info("  -> Content Type: ${content.mimeType}");

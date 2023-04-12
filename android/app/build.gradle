@@ -96,7 +96,7 @@ android {
         beta {
             dimension "app"
             resValue "string", "app_name", "BlueBubbles (Beta)"
-            resValue "color", "ic_launcher_background", "#4990de"
+            resValue "color", "ic_launcher_background", "#683dd4"
             resValue "string", "file_provider", "com.bluebubbles.messaging.beta.fileprovider"
             applicationId "com.bluebubbles.messaging.beta"
         }
@@ -115,8 +115,8 @@ android {
             productFlavors.joel.signingConfig signingConfigs.debug
             productFlavors.tanay.signingConfig signingConfigs.debug
             productFlavors.alpha.signingConfig signingConfigs.release
-            productFlavors.beta.signingConfig signingConfigs.release
-            productFlavors.prod.signingConfig signingConfigs.release
+            productFlavors.beta.signingConfig signingConfigs.debug
+            productFlavors.prod.signingConfig signingConfigs.debug
             minifyEnabled false
             shrinkResources false
         }

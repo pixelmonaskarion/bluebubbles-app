@@ -47,12 +47,13 @@ class FilesystemService extends GetxService {
 
   void checkFont() async {
     if (!kIsWeb) {
-      final file = File("${fs.appDocDir.path}/font/apple.ttf");
+      EmojiFonts font = ss.settings.emojiFont;
+      final file = File("${fs.appDocDir.path}/font/${font.name}.ttf");
       final exists = await file.exists();
       if (exists) {
         final bytes = await file.readAsBytes();
         fontExistsOnDisk.value = true;
-        final fontLoader = FontLoader("Apple Color Emoji");
+        final fontLoader = FontLoader(font.fontName);
         final cachedFontBytes = ByteData.view(bytes.buffer);
         fontLoader.addFont(
           Future<ByteData>.value(cachedFontBytes),
